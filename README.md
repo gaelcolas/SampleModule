@@ -39,7 +39,8 @@ Eventually, the aim is to extract this structure and the key re-usable files int
         - [ ] Upload test results to Appveyor
     - [ ] Generate the help
         - [ ] PlatyPS to generate or update the help MDs in BuildOutput\docs
-        - [ ] PlatyPS to generate or update the help MAML in BuildOutput\SampleModule
+        - [ ] PlatyPS to generate MAML in BuildOutput\SampleModule
+        - [ ] PlatyPS to generate External Help file in $BuildOutput\
     - [ ] Prepare Module for export
         - [ ] Update Metadata with FunctionToExports
         - [ ] Update Metadata with new version
