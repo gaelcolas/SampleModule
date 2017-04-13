@@ -39,6 +39,7 @@ task .  Clean,
         CopySourceToModuleOut,
         MergeFilesToPSM1,
         CleanOutputEmptyFolders,
+        Unit2TestsStopOnFail,
         IntegrationTests, 
         QualityTestsStopOnFail
 
