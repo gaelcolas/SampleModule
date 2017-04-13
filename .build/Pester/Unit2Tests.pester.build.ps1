@@ -63,9 +63,9 @@ task Unit2Tests {
     $PSVersion = 'PSv{0}.{1}' -f $PSVersionTable.PSVersion.Major, $PSVersionTable.PSVersion.Minor
     $Timestamp = Get-date -uformat "%Y%m%d-%H%M%S"
     $TestResultFileName = "Unit2_$PSVersion`_$TimeStamp.xml"
-    $TestResultFile = [system.io.path]::Combine($BuildOutput,'testResults','unit',$PesterOutputFormat,$TestResultFileName)
+    $TestResultFile = [system.io.path]::Combine($BuildOutput,'testResults','unit2',$PesterOutputFormat,$TestResultFileName)
     $TestResultFileParentFolder = Split-Path $TestResultFile -Parent
-    $PesterOutFilePath = [system.io.path]::Combine($BuildOutput,'testResults','unit',$PesterOutputSubFolder,$TestResultFileName)
+    $PesterOutFilePath = [system.io.path]::Combine($BuildOutput,'testResults','unit2',$PesterOutputSubFolder,$TestResultFileName)
     $PesterOutParentFolder = Split-Path $PesterOutFilePath -Parent
     
     if (!(Test-Path $PesterOutParentFolder)) {

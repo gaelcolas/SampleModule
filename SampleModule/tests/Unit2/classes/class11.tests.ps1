@@ -1,5 +1,5 @@
 InModuleScope SampleModule {
-    Describe class1 {
+    Describe class11 {
         Context 'Type creation' {
             It 'Has created a type named class11' {
                 'class11' -as [Type] | Should -BeOfType [Type]
