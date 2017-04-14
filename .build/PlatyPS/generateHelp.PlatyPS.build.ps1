@@ -22,6 +22,21 @@ Param (
 
 )
 
+Task UpdateHelp{
+    $LineSeparation
+    "`t`t`t UPDATE HELP MARKDOWN FILE"
+    $LineSeparation
+
+    if (![io.path]::IsPathRooted($BuildOutput)) {
+        $BuildOutput = Join-Path -Path $ProjectPath.FullName -ChildPath $BuildOutput
+    }
+    $HelpFolder = [io.Path]::Combine($ProjectPath,$SourceFolder,$HelpFolder)
+
+    import-module -Force ([io.DirectoryInfo][io.Path]::Combine($ProjectPath,$SourceFolder,"$ProjectName.psd1")).ToString()
+    Update-MarkdownHelpModule -Path $HelpFolder
+}
+
+
 Task GenerateMamlFromMd {
     $LineSeparation
     "`t`t`t GENERATE MAML IN BUILD OUTPUT"
@@ -32,6 +47,6 @@ Task GenerateMamlFromMd {
     }
     $BuiltModuleFolder = [io.Path]::Combine($BuildOutput,$ProjectName)
 
-    New-ExternalHelp -Path "$SourceFolder\$HelpFolder" -OutputPath "$BuiltModuleFolder\$HelpCultureInfo" -Force
-}
+    New-ExternalHelp -Path "$ProjectPath\$SourceFolder\$HelpFolder" -OutputPath "$BuiltModuleFolder\$HelpCultureInfo" -Force
 
+}
