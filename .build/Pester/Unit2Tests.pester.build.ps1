@@ -117,7 +117,7 @@ task FailUnit2IfLastCodeConverageUnderThreshold {
     }
 
     $TestResultFileName = "Unit2_*_*.xml"
-    $PesterOutPath = [system.io.path]::Combine($BuildOutput,'testResults','unit',$PesterOutputSubFolder,$TestResultFileName)
+    $PesterOutPath = [system.io.path]::Combine($BuildOutput,'testResults','unit2',$PesterOutputSubFolder,$TestResultFileName)
     $PesterOutPath
     $PesterOutFile =  Get-ChildItem -Path $PesterOutPath |  Sort-Object -Descending | Select-Object -first 1
     $PesterObject = Import-Clixml -Path $PesterOutFile.FullName
