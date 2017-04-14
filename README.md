@@ -30,7 +30,8 @@ Eventually, the aim is to extract this structure and the key re-usable files int
         - [x] Run Module Unit tests against 'compiled' module
         - [x] Save code coverage to file (CLIXml), fail if under threshold
         - [x] Save test results in XML
-        - [ ] Upload test results to Appveyor
+        - [x] Upload test results to Appveyor
+        - [ ] Run tests in another (Clean) Process
     - [ ] Run QA tests
         - [x] Ensure each function file has an associated test file
         - [ ] Ensure each Class file has an associated test file
@@ -42,6 +43,7 @@ Eventually, the aim is to extract this structure and the key re-usable files int
     - [ ] Generate the help
         - [ ] PlatyPS to generate or update the help MDs in BuildOutput\docs
         - [ ] PlatyPS to generate or update the help MAML in BuildOutput\SampleModule
+        - [ ] Either Remove Comment-Based help, or add .EXTERNALHELP
     - [ ] Prepare Module for export
         - [ ] Update Metadata with FunctionToExports
         - [ ] Update Metadata with new version
