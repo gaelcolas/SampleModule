@@ -1,7 +1,8 @@
 ##Import Classes
-$ClassLoadOrder = Import-PowerShellDataFile -Path $PSScriptRoot\Classes\classes.psd1 -ErrorAction SilentlyContinue
-foreach ($class in $ClassLoadOrder.LoadingData) {
-    $path = '{0}\classes\{1}.ps1' -f $PSScriptRoot, $class[0]
+$ClassLoadOrder = Import-PowerShellDataFile -Path "$PSScriptRoot\Classes\classes.psd1" -ErrorAction SilentlyContinue
+
+foreach ($class in $ClassLoadOrder.order) {
+    $path = '{0}\classes\{1}.ps1' -f $PSScriptRoot, $class
     if (Test-Path $path) {
         . $path
     }
@@ -16,6 +17,7 @@ Foreach($import in @($Public + $Private))
 {
     Try
     {
+        Write-Verbose "Importing $($Import.FullName)"
         . $import.fullname
     }
     Catch
@@ -25,6 +27,3 @@ Foreach($import in @($Public + $Private))
 }
 
 Export-ModuleMember -Function $Public.Basename
-
-
-######{{{{EDIT BELOW ONLY}}}}

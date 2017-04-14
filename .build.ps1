@@ -15,7 +15,7 @@ Param (
     [String]
     $DependencyTarget = "$BuildOutput/modules",
 
-    $MergeList = @('enum*',[PSCustomObject]@{Name='class*';order={@('class1','class2','class12','class11').indexOf($_.BaseName)}},'priv*','pub*')
+    $MergeList = @('enum*',[PSCustomObject]@{Name='class*';order={(Import-PowerShellDataFile .\SampleModule\Classes\classes.psd1).order.indexOf($_.BaseName)}},'priv*','pub*')
     
 )
 if ((Get-PSCallStack)[1].InvocationInfo.MyCommand.Name -ne 'Invoke-Build.ps1') {
