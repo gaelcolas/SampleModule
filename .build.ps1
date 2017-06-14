@@ -55,7 +55,8 @@ Process {
 
 begin {
     function Resolve-Dependency {
-
+        [CmdletBinding()]
+        param()
         if (!(Get-PackageProvider -Name NuGet -ForceBootstrap)) {
             $providerBootstrapParams = @{
                 Name = 'nuget'
@@ -95,7 +96,7 @@ begin {
     }
 
     if (!$NoDependency) {
-        Resolve-Dependency
+        Resolve-Dependency -Verbose:$PSBoundParameters.verbose
     }
 }
 
