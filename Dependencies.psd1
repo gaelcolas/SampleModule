@@ -4,7 +4,7 @@
         AddToPath = $True
         Parameters = @{
             Force = $True
-            Import = $True
+            #Import = $True
         }
     }
 

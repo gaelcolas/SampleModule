@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<plasterManifest
+  schemaVersion="1.0" xmlns="http://www.microsoft.com/schemas/PowerShell/Plaster/v1">
+  <metadata>
+    <name>SampleModule</name>
+    <id>e46ca074-08e9-4a4b-8c87-e927ffb8c98e</id>
+    <version>0.0.1</version>
+    <title>Sample Module Template</title>
+    <description>Sample Module Template with Build bootstrap</description>
+    <author>Gael Colas</author>
+    <tags>Template, Build, Module</tags>
+  </metadata>
+  <parameters>
+    <parameter name="FullName" type="text" prompt="Author's name" />
+    <parameter name="ModuleName" type="text" prompt="Name of your module" />
+    <parameter name="ModuleDesc" type="text" prompt="Description of this module" />
+    <parameter name="Version" type="text" prompt="Module version"  default="0.0.1"/>
+  </parameters>
+  <content>
+    <file source='' destination='media' />
+    <file source='' destination='.build' />
+
+    <file source='' destination='${PLASTER_PARAM_ModuleName}' />
+    <file source='' destination='${PLASTER_PARAM_ModuleName}/classes' />
+    <file source='' destination='${PLASTER_PARAM_ModuleName}/private' />
+    <file source='' destination='${PLASTER_PARAM_ModuleName}/public' />
+    <file source='' destination='${PLASTER_PARAM_ModuleName}/tests' />
+    <file source='' destination='${PLASTER_PARAM_ModuleName}/examples' />
+
+    <file source='' destination='${PLASTER_PARAM_ModuleName}/docs' />
+    <file source='' destination='${PLASTER_PARAM_ModuleName}/specs' />
+    <file source='' destination='${PLASTER_PARAM_ModuleName}/examples' />
+    <file source='' destination='${PLASTER_PARAM_ModuleName}/enums' />
+  </content>
+</plasterManifest>
