@@ -1,3 +1,4 @@
+#Requires -Modules Pester
 Param (
     [io.DirectoryInfo]
     $ProjectPath = (property ProjectPath (Join-Path $PSScriptRoot '../..' -Resolve -ErrorAction SilentlyContinue)),
@@ -84,6 +85,7 @@ task UnitTests {
         CodeCoverage = $ListOfTestedFile
         PassThru     = $true
     }
+    Import-module Pester
     $script:UnitTestResults = Invoke-Pester @PesterParams
     $null = $script:UnitTestResults | Export-Clixml -Path $PesterOutFilePath -Force
     Pop-Location
