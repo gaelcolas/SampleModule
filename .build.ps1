@@ -1,13 +1,19 @@
-#Requires -Modules InvokeBuild
+[cmdletBinding()]
 Param (
+    [Parameter(Position=0)]
+    $Tasks,
+
+    [switch]
+    $NoDependency,
+
     [String]
-    $BuildOutput = "$PSScriptRoot\BuildOutput",
+    $BuildOutput = "BuildOutput",
 
     [String[]]
-    $GalleryRepository, #used in ResolveDependencies, has default
+    $GalleryRepository,
 
     [Uri]
-    $GalleryProxy, #used in ResolveDependencies, $null if not specified
+    $GalleryProxy,
 
     [Switch]
     $ForceEnvironmentVariables = [switch]$true,
@@ -18,31 +24,80 @@ Param (
     $MergeList = @('enum*',[PSCustomObject]@{Name='class*';order={(Import-PowerShellDataFile .\SampleModule\Classes\classes.psd1).order.indexOf($_.BaseName)}},'priv*','pub*')
     
 )
-if ((Get-PSCallStack)[1].InvocationInfo.MyCommand.Name -ne 'Invoke-Build.ps1') {
-    Invoke-Build
-    return
-}
 
-Get-ChildItem -Path "$PSScriptRoot/.build/" -Recurse -Include *.ps1 -Verbose |
-    Foreach-Object {
-        "Importing file $($_.BaseName)" | Write-Verbose
-        . $_.FullName 
+Process {
+    if ($MyInvocation.ScriptName -notlike '*Invoke-Build.ps1') {
+        Invoke-Build $Tasks $MyInvocation.MyCommand.Path @PSBoundParameters
+        return
     }
 
-task .  Clean,
-        ResolveDependencies,
-        SetBuildEnvironment,
-        UnitTests,
-        UploadUnitTestResultsToAppVeyor,
-        FailBuildIfFailedUnitTest, 
-        FailIfLastCodeConverageUnderThreshold,
-        CopySourceToModuleOut,
-        MergeFilesToPSM1,
-        CleanOutputEmptyFolders,
-        IntegrationTests, 
-        QualityTestsStopOnFail
+    Get-ChildItem -Path "$PSScriptRoot/.build/" -Recurse -Include *.ps1 -Verbose |
+        Foreach-Object {
+            "Importing file $($_.BaseName)" | Write-Verbose
+            . $_.FullName 
+        }
 
-task testAll UnitTests, IntegrationTests, QualityTestsStopOnFail
+    task .  Clean,
+            SetBuildEnvironment,
+            UnitTests,
+            UploadUnitTestResultsToAppVeyor,
+            FailBuildIfFailedUnitTest, 
+            FailIfLastCodeConverageUnderThreshold,
+            CopySourceToModuleOut,
+            MergeFilesToPSM1,
+            CleanOutputEmptyFolders,
+            IntegrationTests, 
+            QualityTestsStopOnFail
+
+    task testAll UnitTests, IntegrationTests, QualityTestsStopOnFail
+}
+
+
+begin {
+    function Resolve-Dependency {
+
+        if (!(Get-PackageProvider -Name NuGet -ForceBootstrap)) {
+            $providerBootstrapParams = @{
+                Name = 'nuget'
+                force = $true
+                ForceBootstrap = $true
+            }
+            if ($GalleryProxy) { $providerBootstrapParams.Add('Proxy',$GalleryProxy) }
+            $null = Install-PackageProvider @providerBootstrapParams
+            Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+        }
+
+        if (!(Get-Module -Listavailable PSDepend)) {
+            Write-verbose "BootStrapping PSDepend"
+            "Parameter $BuildOutput"| Write-verbose
+            $InstallPSDependParams = @{
+                Name = 'PSDepend'
+                AllowClobber = $true
+                Confirm = $false
+                Force = $true
+            }
+            if ($GalleryRepository) { $InstallPSDependParams.Add('Repository',$GalleryRepository) }
+            if ($GalleryProxy)      { $InstallPSDependParams.Add('Proxy',$GalleryProxy) }
+            if ($GalleryCredential) { $InstallPSDependParams.Add('ProxyCredential',$GalleryCredential) }
+            Install-Module @InstallPSDependParams
+        }
+
+        $PSDependParams = @{
+            Force = $true
+            Path = "$PSScriptRoot\Dependencies.psd1"
+        }
+
+        if ($DependencyTarget) {
+            $PSDependParams.Add('Target',$DependencyTarget)
+        }
+        Invoke-PSDepend @PSDependParams
+        Write-Verbose "Project Bootstrapped, returning to Invoke-Build"
+    }
+
+    if (!$NoDependency) {
+        Resolve-Dependency
+    }
+}
 
 #task . ResolveDependencies, SetBuildVariable, UnitTestsStopOnFail, IntegrationTests
 <#

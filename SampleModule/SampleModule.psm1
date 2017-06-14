@@ -1,5 +1,8 @@
+<# INSERT HEADER ABOVE #>
 ##Import Classes
-$ClassLoadOrder = Import-PowerShellDataFile -Path "$PSScriptRoot\Classes\classes.psd1" -ErrorAction SilentlyContinue
+if (Test-Path "$PSScriptRoot\Classes\classes.psd1") {
+    $ClassLoadOrder = Import-PowerShellDataFile -Path "$PSScriptRoot\Classes\classes.psd1" -ErrorAction SilentlyContinue
+}
 
 foreach ($class in $ClassLoadOrder.order) {
     $path = '{0}\classes\{1}.ps1' -f $PSScriptRoot, $class
@@ -27,3 +30,4 @@ Foreach($import in @($Public + $Private))
 }
 
 Export-ModuleMember -Function $Public.Basename
+<# INSERT FOOTER BELOW #>
