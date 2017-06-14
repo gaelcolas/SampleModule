@@ -28,8 +28,13 @@
     <file source='' destination='${PLASTER_PARAM_ModuleName}/examples' />
 
     <file source='' destination='${PLASTER_PARAM_ModuleName}/docs' />
-    <file source='' destination='${PLASTER_PARAM_ModuleName}/specs' />
+    <file source='' destination='${PLASTER_PARAM_ModuleName}/specs/steps' />
     <file source='' destination='${PLASTER_PARAM_ModuleName}/examples' />
     <file source='' destination='${PLASTER_PARAM_ModuleName}/enums' />
+
+    <file source='.build.ps1' destination='.build.ps1' />
+    <file source='appveyor.ps1' destination='appveyor.ps1' />
+    <file source='.build.ps1' destination='.build.ps1' />
+    <file source='.build.ps1' destination='.build.ps1' />
   </content>
 </plasterManifest>

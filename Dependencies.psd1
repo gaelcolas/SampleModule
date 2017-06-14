@@ -3,8 +3,6 @@
     PSDependOptions = @{
         AddToPath = $True
         Parameters = @{
-            Force = $True
-            #Import = $True
         }
     }
 
