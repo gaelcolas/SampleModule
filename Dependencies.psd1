@@ -9,6 +9,7 @@
     }
 
     buildhelpers = 'latest'
+    invokeBuild = 'latest'
     pester = 'latest'
     PSScriptAnalyzer = 'latest'
     PlatyPS = 'latest'
