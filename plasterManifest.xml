@@ -11,14 +11,14 @@
     <tags>Template, Build, Module</tags>
   </metadata>
   <parameters>
-    <parameter name="FullName" type="text" prompt="Author's name" />
+    <parameter name="ModuleAuthor" type="text" prompt="Author's name" />
     <parameter name="ModuleName" type="text" prompt="Name of your module" />
-    <parameter name="ModuleDesc" type="text" prompt="Description of this module" />
-    <parameter name="Version" type="text" prompt="Module version"  default="0.0.1"/>
+    <parameter name="ModuleDescription" type="text" prompt="Description of this module" />
+    <parameter name="ModuleVersion" type="text" prompt="Module version"  default="0.0.1"/>
   </parameters>
   <content>
     <file source='' destination='media' />
-    <file source='' destination='.build' />
+    <file source='.build/**' destination='.build/' />
 
     <file source='' destination='${PLASTER_PARAM_ModuleName}' />
     <file source='' destination='${PLASTER_PARAM_ModuleName}/classes' />
@@ -33,8 +33,20 @@
     <file source='' destination='${PLASTER_PARAM_ModuleName}/enums' />
 
     <file source='.build.ps1' destination='.build.ps1' />
-    <file source='appveyor.ps1' destination='appveyor.ps1' />
-    <file source='.build.ps1' destination='.build.ps1' />
-    <file source='.build.ps1' destination='.build.ps1' />
+    <file source='appveyor.yml' destination='appveyor.yml' />
+    <file source='.kitchen.yml' destination='.kitchen.yml' />
+    <file source='Dependencies.psd1' destination='Dependencies.psd1' />
+
+    <newModuleManifest destination='${PLASTER_PARAM_ModuleName}/${PLASTER_PARAM_ModuleName}.psd1' 
+        moduleVersion='$PLASTER_PARAM_ModuleVersion'
+        rootModule='${PLASTER_PARAM_ModuleName}.psm1'
+        author='$PLASTER_PARAM_ModuleAuthor'
+        description='$PLASTER_PARAM_ModuleDesc'/>
+    <file source='media/module.template.psm1' destination='${PLASTER_PARAM_ModuleName}/${PLASTER_PARAM_ModuleName}.psm1'/>
+
+    <!-- Add license based on type of license MIT\Apache2\CC...-->
+    <templateFile source='media/LICENSES/LICENSE.MIT.Template' destination='LICENSE'/>
+    <templateFile source='media/README.md.template' destination='README.md'/>
+    <templateFile source='media/docs/about_SampleModule.md.template' destination='docs/about_${PLASTER_PARAM_ModuleName}.md'/>
   </content>
 </plasterManifest>
