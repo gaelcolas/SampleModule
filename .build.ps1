@@ -22,7 +22,7 @@ Param (
     $DependencyTarget = "$BuildOutput/modules",
 
     $MergeList = @('enum*',[PSCustomObject]@{Name='class*';order={(Import-PowerShellDataFile .\SampleModule\Classes\classes.psd1).order.indexOf($_.BaseName)}},'priv*','pub*')
-    
+    ,$CodeCoverageThreshold = 0
 )
 
 Process {
