@@ -2,6 +2,7 @@
     # Set up a mini virtual environment...
     PSDependOptions = @{
         AddToPath = $True
+        Target = 'BuildOutput\modules'
         Parameters = @{
         }
     }

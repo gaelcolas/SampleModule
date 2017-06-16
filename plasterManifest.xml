@@ -32,6 +32,7 @@
     <file source='' destination='${PLASTER_PARAM_ModuleName}/${PLASTER_PARAM_ModuleName}/examples' />
     <file source='' destination='${PLASTER_PARAM_ModuleName}/${PLASTER_PARAM_ModuleName}/enums' />
 
+    <file source='.gitinore' destination='${PLASTER_PARAM_ModuleName}/.gitignore' />
     <file source='.build.ps1' destination='${PLASTER_PARAM_ModuleName}/.build.ps1' />
     <file source='appveyor.yml' destination='${PLASTER_PARAM_ModuleName}/appveyor.yml' />
     <file source='.kitchen.yml' destination='${PLASTER_PARAM_ModuleName}/.kitchen.yml' />

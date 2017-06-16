@@ -18,9 +18,6 @@ Param (
     [Switch]
     $ForceEnvironmentVariables = [switch]$true,
 
-    [String]
-    $DependencyTarget = "$BuildOutput/modules",
-
     $MergeList = @('enum*',[PSCustomObject]@{Name='class*';order={(Import-PowerShellDataFile .\SampleModule\Classes\classes.psd1).order.indexOf($_.BaseName)}},'priv*','pub*')
     ,$CodeCoverageThreshold = 0
 )
@@ -90,9 +87,6 @@ begin {
             Path = "$PSScriptRoot\Dependencies.psd1"
         }
 
-        if ($DependencyTarget) {
-            $PSDependParams.Add('Target',$DependencyTarget)
-        }
         Invoke-PSDepend @PSDependParams
         Write-Verbose "Project Bootstrapped, returning to Invoke-Build"
     }
