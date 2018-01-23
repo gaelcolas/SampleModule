@@ -1,12 +1,9 @@
 Param (
-    [io.DirectoryInfo]
-    $ProjectPath = (property ProjectPath (Join-Path $PSScriptRoot '../..' -Resolve -ErrorAction SilentlyContinue)),
+    [string]
+    $BuildOutput = (property BuildOutput 'BuildOutput'),
 
     [string]
-    $BuildOutput = (property BuildOutput 'C:\BuildOutput'),
-
-    [string]
-    $ProjectName = (property ProjectName (Split-Path -Leaf (Join-Path $PSScriptRoot '../..')) ),
+    $ProjectName = (property ProjectName (Split-Path -Leaf $BuildRoot)),
 
     [string]
     $PesterOutputFormat = (property PesterOutputFormat 'NUnitXml'),
@@ -15,16 +12,11 @@ Param (
     $RelativePathToQualityTests = (property RelativePathToQualityTests 'tests/QA'),
 
     [string]
-    $PesterOutputSubFolder = (property PesterOutputSubFolder 'PesterOut'),
-
-    [string]
-    $LineSeparation = (property LineSeparation ('-' * 78))
+    $PesterOutputSubFolder = (property PesterOutputSubFolder 'PesterOut')
 )
 
-task QualityTests {
-    $LineSeparation
-    "`t`t`t RUNNING Quality TESTS"
-    $LineSeparation
+# Synopsis: Making sure the Module meets some quality standard (help, tests)
+task Quality_Tests {
     "`tProject Path = $ProjectPath"
     "`tProject Name = $ProjectName"
     "`tQuality Tests   = $RelativePathToQualityTests"
@@ -73,8 +65,9 @@ task QualityTests {
     Pop-Location
 }
 
-task FailBuildIfFailedQualityTest -If ($CodeCoverageThreshold -ne 0) {
+# Synopsis: 
+task Fail_Build_if_Quality_Tests_failed -If ($CodeCoverageThreshold -ne 0) {
     assert ($script:QualityTestResults.FailedCount -eq 0) ('Failed {0} Quality tests. Aborting Build' -f $script:QualityTestResults.FailedCount)
 }
 
-task QualityTestsStopOnFail QualityTests,FailBuildIfFailedQualityTest
+task QualityTestsStopOnFail Quality_Tests,Fail_Build_if_Quality_Tests_failed

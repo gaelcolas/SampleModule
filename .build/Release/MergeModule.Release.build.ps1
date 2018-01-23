@@ -1,9 +1,6 @@
 ﻿Param (
-    [io.DirectoryInfo]
-    $ProjectPath = (property ProjectPath (Join-Path $PSScriptRoot '../..' -Resolve -ErrorAction SilentlyContinue)),
-
     [string]
-    $ProjectName = (property ProjectName (Split-Path -Leaf (Join-Path $PSScriptRoot '../..')) ),
+    $ProjectName = (property ProjectName (Split-Path -Leaf $BuildRoot) ),
 
     [string]
     $SourceFolder = $ProjectName,
@@ -24,25 +21,18 @@
 )
 
 Task CopySourceToModuleOut {
-    $LineSeparation
-    "`t`t`t COPY SOURCE TO BUILD OUTPUT"
-    $LineSeparation
-
     if (![io.path]::IsPathRooted($BuildOutput)) {
-        $BuildOutput = Join-Path -Path $ProjectPath.FullName -ChildPath $BuildOutput
+        $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
     }
     $BuiltModuleFolder = [io.Path]::Combine($BuildOutput,$ProjectName)
-    "Copying $ProjectPath\$SourceFolder To $BuiltModuleFolder\"
-    Copy-Item -Path "$ProjectPath\$SourceFolder" -Destination "$BuiltModuleFolder\" -Recurse -Force -Exclude '*.bak'
+    "Copying $BuildRoot\$SourceFolder To $BuiltModuleFolder\"
+    Copy-Item -Path "$BuildRoot\$SourceFolder" -Destination "$BuiltModuleFolder\" -Recurse -Force -Exclude '*.bak'
 }
 
 Task MergeFilesToPSM1 {
-    $LineSeparation
-    "`t`t`t MERGE TO PSM1"
-    $LineSeparation
     "`tORDER: $($MergeList.ToString())"
     if (![io.path]::IsPathRooted($BuildOutput)) {
-        $BuildOutput = Join-Path -Path $ProjectPath.FullName -ChildPath $BuildOutput
+        $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
     }
     $BuiltModuleFolder = [io.Path]::Combine($BuildOutput,$ProjectName)
     if(!$MergeList) {$MergeList = @('enum*','class*','priv*','pub*') }
@@ -54,11 +44,9 @@ Task MergeFilesToPSM1 {
 }
 
 Task CleanOutputEmptyFolders {
-    $LineSeparation
-    "`t`t`t REMOVE EMPTY FOLDERS"
-    $LineSeparation
+
     if (![io.path]::IsPathRooted($BuildOutput)) {
-        $BuildOutput = Join-Path -Path $ProjectPath.FullName -ChildPath $BuildOutput
+        $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
     }
 
     Get-ChildItem $BuildOutput -Recurse -Force | Sort-Object -Property FullName -Descending | Where-Object {
@@ -69,12 +57,9 @@ Task CleanOutputEmptyFolders {
 }
 
 Task UpdateModuleManifest {
-    $LineSeparation
-    "`t`t`t UPDATE MODULE MANIFEST"
-    $LineSeparation
 
     if (![io.path]::IsPathRooted($BuildOutput)) {
-        $BuildOutput = Join-Path -Path $ProjectPath.FullName -ChildPath $BuildOutput
+        $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
     }
     $BuiltModule = [io.path]::Combine($BuildOutput,$ProjectName,"$ProjectName.psd1")
     Set-ModuleFunctions -Path $BuiltModule

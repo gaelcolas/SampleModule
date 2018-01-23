@@ -1,12 +1,9 @@
 Param (
-    [io.DirectoryInfo]
-    $ProjectPath = (property ProjectPath (Join-Path $PSScriptRoot '../..' -Resolve -ErrorAction SilentlyContinue)),
+    [string]
+    $BuildOutput = (property BuildOutput 'BuildOutput'),
 
     [string]
-    $BuildOutput = (property BuildOutput 'C:\BuildOutput'),
-
-    [string]
-    $ProjectName = (property ProjectName (Split-Path -Leaf (Join-Path $PSScriptRoot '../..')) ),
+    $ProjectName = (property ProjectName (Split-Path -Leaf $BuildRoot) ),
 
     [string]
     $PesterOutputFormat = (property PesterOutputFormat 'NUnitXml'),
@@ -20,15 +17,12 @@ Param (
 )
 
 task DeployAll {
-    $LineSeparation
-    "`t`t`t DEPLOYMENT "
-    $LineSeparation
 
     if (![io.path]::IsPathRooted($BuildOutput)) {
-        $BuildOutput = Join-Path -Path $ProjectPath.FullName -ChildPath $BuildOutput
+        $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
     }
 
-    $DeployFile =  [io.path]::Combine($ProjectPath, $DeployConfig)
+    $DeployFile =  [io.path]::Combine($BuildRoot, $DeployConfig)
     
     "Deploying Module based on $DeployConfig config"
     

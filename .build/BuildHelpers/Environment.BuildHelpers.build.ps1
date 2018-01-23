@@ -1,8 +1,5 @@
 Param (
     [string]
-    $LineSeparation = (property LineSeparation ('-' * 78)),
-
-    [string]
     $VariableNamePrefix =  $(try {property VariableNamePrefix} catch {''}),
 
     [switch]
@@ -10,9 +7,6 @@ Param (
 )
 
 task SetBuildEnvironment {
-    $LineSeparation
-    "`t`t`t BUILD HELPERS INIT"
-    $LineSeparation
     $BH_Params = @{
         variableNamePrefix = $VariableNamePrefix
         ErrorVariable      = 'err'
@@ -22,6 +16,6 @@ task SetBuildEnvironment {
     }
     Set-BuildEnvironment @BH_Params
     foreach ($e in $err) {
-        Write-Host $e
+        Write-Build Red $e
     }
 }
