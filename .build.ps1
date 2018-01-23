@@ -20,6 +20,16 @@ Param (
 
     $MergeList = @('enum*',[PSCustomObject]@{Name='class*';order={(Import-PowerShellDataFile -EA 0 .\*\Classes\classes.psd1).order.indexOf($_.BaseName)}},'priv*','pub*')
     
+    ,$TaskHeader = {
+        param($Path)
+        '=' * 79
+        Write-Build Cyan "`t`t`t$($Task.Name.replace('_',' ').ToUpper())"
+        Write-Build DarkGray  "$(Get-BuildSynopsis $Task)"
+        '-' * 79
+        Write-Build DarkGray "  $($Task.InvocationInfo.ScriptName):$($Task.InvocationInfo.ScriptLineNumber)"
+        ''
+    }
+
     ,$CodeCoverageThreshold = 80
 )
 
@@ -46,6 +56,9 @@ Process {
             "Importing file $($_.BaseName)" | Write-Verbose
             . $_.FullName 
         }
+    
+    Set-BuildHeader $TaskHeader
+
     task .  Clean,
             SetBuildEnvironment,
             QualityTestsStopOnFail,
