@@ -67,6 +67,7 @@ task Quality_Tests {
 
 # Synopsis: This task ensures the build job fails if the test aren't successful.
 task Fail_Build_if_Quality_Tests_failed -If ($CodeCoverageThreshold -ne 0) {
+    "Asserting that no Quality test failed"
     assert ($script:QualityTestResults.FailedCount -eq 0) ('Failed {0} Quality tests. Aborting Build' -f $script:QualityTestResults.FailedCount)
 }
 

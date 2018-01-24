@@ -68,8 +68,8 @@ Process {
             Merge_Source_Files_To_PSM1,
             Clean_Empty_Folders_from_Build_Output,
             Update_Module_Manifest,
-            Unit_Tests,
-            UploadUnitTestResultsToAppVeyor,
+            Run_Unit_Tests,
+            Upload_Unit_Test_Results_To_AppVeyor,
             Fail_Build_if_Unit_Test_Failed, 
             Fail_if_Last_Code_Converage_is_Under_Threshold,
             IntegrationTests,
@@ -77,6 +77,7 @@ Process {
 
     task testAll UnitTests, IntegrationTests, QualityTestsStopOnFail
 
+    task Noop {}
 
 }
 

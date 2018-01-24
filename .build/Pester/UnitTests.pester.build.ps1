@@ -22,7 +22,8 @@ Param (
     $CodeCoverageThreshold = (property CodeCoverageThreshold 90)
 )
 
-task Unit_Tests {
+# Synopsis: Execute the Pester Unit tests
+task Run_Unit_Tests {
     "`tProject Path = $BuildRoot"
     "`tProject Name = $ProjectName"
     "`tUnit Tests   = $PathToUnitTests"
@@ -109,10 +110,12 @@ task Unit_Tests {
     Pop-Location
 }
 
+# Synopsis: If the Unit test failed, fail the build (unless Threshold is set to 0)
 task Fail_Build_if_Unit_Test_Failed -If ($CodeCoverageThreshold -ne 0) {
     assert ($script:UnitTestResults.FailedCount -eq 0) ('Failed {0} Unit tests. Aborting Build' -f $script:UnitTestResults.FailedCount)
 }
 
+# Synopsis: If the Code coverage is under the defined threshold, fail the build
 task Fail_if_Last_Code_Converage_is_Under_Threshold {
     "`tProject Path     = $BuildRoot"
     "`tProject Name     = $ProjectName"
@@ -150,4 +153,7 @@ task Fail_if_Last_Code_Converage_is_Under_Threshold {
     }
 }
 
-task Pester_Unit_Tests_Stop_On_Fail Unit_Tests,Fail_Build_if_Unit_Test_Failed,Fail_if_Last_Code_Converage_is_Under_Threshold
+# Synopsis: Task to Run the unit tests and fail build if failed or if the code coverage is under threshold
+task Pester_Unit_Tests_Stop_On_Fail Run_Unit_Tests,
+                                    Fail_Build_if_Unit_Test_Failed,
+                                    Fail_if_Last_Code_Converage_is_Under_Threshold

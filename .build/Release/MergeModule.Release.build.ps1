@@ -32,16 +32,17 @@ Task Copy_Source_To_Module_BuildOutput {
 
 # Synopsis: Merging the PS1 files into the PSM1.
 Task Merge_Source_Files_To_PSM1 {
-    "`tORDER: $($MergeList.ToString())"
+    if(!$MergeList) {$MergeList = @('enum*','class*','priv*','pub*') }
+    "`tORDER: [$($MergeList -join ', ')]`r`n"
+
     if (![io.path]::IsPathRooted($BuildOutput)) {
         $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
     }
-    $BuiltModuleFolder = [io.Path]::Combine($BuildOutput,$ProjectName)
-    if(!$MergeList) {$MergeList = @('enum*','class*','priv*','pub*') }
 
+    $BuiltModuleFolder = [io.Path]::Combine($BuildOutput,$ProjectName)
     # Merge individual PS1 files into a single PSM1, and delete merged files
     $OutModulePSM1 = [io.path]::Combine($BuiltModuleFolder,"$ProjectName.psm1")
-    "Merging to $OutModulePSM1"
+    Write-Build Green "  Merging to $OutModulePSM1"
     $MergeList | Get-MergedModule -DeleteSource -SourceFolder $BuiltModuleFolder | Out-File $OutModulePSM1 -Force
 }
 
@@ -61,13 +62,16 @@ Task Clean_Empty_Folders_from_Build_Output {
 
 # Synopsis: Update the Module Manifest with the $ModuleVersion and setting the module functions
 Task Update_Module_Manifest {
-
     if (![io.path]::IsPathRooted($BuildOutput)) {
         $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
     }
+    
     $BuiltModule = [io.path]::Combine($BuildOutput,$ProjectName,"$ProjectName.psd1")
+    Write-Build Green "  Updating Module functions in Module Manifest..."
     Set-ModuleFunctions -Path $BuiltModule
     if($ModuleVersion) {
+        Write-Build Green "  Updating Module version in Manifest to $ModuleVersion"
         Update-Metadata -path $BuiltModule -PropertyName ModuleVersion -Value $ModuleVersion
     }
+    ''
 }
