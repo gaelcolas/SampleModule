@@ -22,7 +22,7 @@ Param (
     $CodeCoverageThreshold = (property CodeCoverageThreshold 90)
 )
 
-task UnitTests {
+task Unit_Tests {
     "`tProject Path = $BuildRoot"
     "`tProject Name = $ProjectName"
     "`tUnit Tests   = $PathToUnitTests"
@@ -109,11 +109,11 @@ task UnitTests {
     Pop-Location
 }
 
-task FailBuildIfFailedUnitTest -If ($CodeCoverageThreshold -ne 0) {
+task Fail_Build_if_Unit_Test_Failed -If ($CodeCoverageThreshold -ne 0) {
     assert ($script:UnitTestResults.FailedCount -eq 0) ('Failed {0} Unit tests. Aborting Build' -f $script:UnitTestResults.FailedCount)
 }
 
-task FailIfLastCodeConverageUnderThreshold {
+task Fail_if_Last_Code_Converage_is_Under_Threshold {
     "`tProject Path     = $BuildRoot"
     "`tProject Name     = $ProjectName"
     "`tUnit Tests       = $PathToUnitTests"
@@ -150,4 +150,4 @@ task FailIfLastCodeConverageUnderThreshold {
     }
 }
 
-task UnitTestsStopOnFail UnitTests,FailBuildIfFailedUnitTest,FailIfLastCodeConverageUnderThreshold
+task Pester_Unit_Tests_Stop_On_Fail Unit_Tests,Fail_Build_if_Unit_Test_Failed,Fail_if_Last_Code_Converage_is_Under_Threshold

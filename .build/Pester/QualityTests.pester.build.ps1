@@ -38,7 +38,7 @@ task Quality_Tests {
     if (![io.path]::IsPathRooted($BuildOutput)) {
         $BuildOutput = Join-Path -Path $ProjectPath.FullName -ChildPath $BuildOutput
     }
-    # $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(".\nonexist\foo.txt")
+    
     $PSVersion = 'PSv{0}.{1}' -f $PSVersionTable.PSVersion.Major, $PSVersionTable.PSVersion.Minor
     $Timestamp = Get-date -uformat "%Y%m%d-%H%M%S"
     $TestResultFileName = "QA_$PSVersion`_$TimeStamp.xml"
@@ -65,9 +65,10 @@ task Quality_Tests {
     Pop-Location
 }
 
-# Synopsis: 
+# Synopsis: This task ensures the build job fails if the test aren't successful.
 task Fail_Build_if_Quality_Tests_failed -If ($CodeCoverageThreshold -ne 0) {
     assert ($script:QualityTestResults.FailedCount -eq 0) ('Failed {0} Quality tests. Aborting Build' -f $script:QualityTestResults.FailedCount)
 }
 
-task QualityTestsStopOnFail Quality_Tests,Fail_Build_if_Quality_Tests_failed
+# Synopsis: Meta task that runs Quality Tests, and fails if they're not successful
+task Pester_Quality_Tests_Stop_On_Fail Quality_Tests,Fail_Build_if_Quality_Tests_failed

@@ -20,7 +20,8 @@
 
 )
 
-Task CopySourceToModuleOut {
+# Synopsis: Copy the Module Source files to the BuildOutput
+Task Copy_Source_To_Module_BuildOutput {
     if (![io.path]::IsPathRooted($BuildOutput)) {
         $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
     }
@@ -29,7 +30,8 @@ Task CopySourceToModuleOut {
     Copy-Item -Path "$BuildRoot\$SourceFolder" -Destination "$BuiltModuleFolder\" -Recurse -Force -Exclude '*.bak'
 }
 
-Task MergeFilesToPSM1 {
+# Synopsis: Merging the PS1 files into the PSM1.
+Task Merge_Source_Files_To_PSM1 {
     "`tORDER: $($MergeList.ToString())"
     if (![io.path]::IsPathRooted($BuildOutput)) {
         $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
@@ -43,7 +45,8 @@ Task MergeFilesToPSM1 {
     $MergeList | Get-MergedModule -DeleteSource -SourceFolder $BuiltModuleFolder | Out-File $OutModulePSM1 -Force
 }
 
-Task CleanOutputEmptyFolders {
+# Synopsis: Removing Empty folders from the Module Build output
+Task Clean_Empty_Folders_from_Build_Output {
 
     if (![io.path]::IsPathRooted($BuildOutput)) {
         $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
@@ -56,7 +59,8 @@ Task CleanOutputEmptyFolders {
     } | Remove-Item
 }
 
-Task UpdateModuleManifest {
+# Synopsis: Update the Module Manifest with the $ModuleVersion and setting the module functions
+Task Update_Module_Manifest {
 
     if (![io.path]::IsPathRooted($BuildOutput)) {
         $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput

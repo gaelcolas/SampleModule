@@ -6,7 +6,8 @@ Param (
     $ForceEnvironmentVariables = $(try {property ForceEnvironmentVariables} catch {$false})
 )
 
-task SetBuildEnvironment {
+# Synopsis: Using Build Helpers to Set default environment variables
+task Set_Build_Environment_Variables {
     $BH_Params = @{
         variableNamePrefix = $VariableNamePrefix
         ErrorVariable      = 'err'
@@ -14,6 +15,7 @@ task SetBuildEnvironment {
         Force              = $ForceEnvironmentVariables
         Verbose            = $verbose
     }
+
     Set-BuildEnvironment @BH_Params
     foreach ($e in $err) {
         Write-Build Red $e

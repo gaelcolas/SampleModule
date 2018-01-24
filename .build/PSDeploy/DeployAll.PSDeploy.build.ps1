@@ -16,7 +16,8 @@ Param (
     $DeployConfig = (property DeployConfig 'Deploy.PSDeploy.ps1')
 )
 
-task DeployAll {
+# Synopsis: Deploy everything configured in PSDeploy
+task Deploy_with_PSDeploy {
 
     if (![io.path]::IsPathRooted($BuildOutput)) {
         $BuildOutput = Join-Path -Path $BuildRoot -ChildPath $BuildOutput
@@ -29,7 +30,6 @@ task DeployAll {
     $InvokePSDeployArgs = @{
         Path    = $DeployFile
         Force   = $true
-        Verbose = $true
     }
 
     if($DeploymentTags) {
