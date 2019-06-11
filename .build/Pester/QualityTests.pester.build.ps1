@@ -49,12 +49,12 @@ task Quality_Tests {
     
     if (!(Test-Path $PesterOutParentFolder)) {
         Write-Verbose "CREATING Pester Results Output Folder $PesterOutParentFolder"
-        $null = mkdir $PesterOutParentFolder -Force
+        $null = New-Item -Path $PesterOutParentFolder -ItemType Directory -Force
     }
 
     if (!(Test-Path $TestResultFileParentFolder)) {
         Write-Verbose "CREATING Test Results Output Folder $TestResultFileParentFolder"
-        $null = mkdir $TestResultFileParentFolder -Force
+        $null = New-Item -Path $TestResultFileParentFolder -ItemType Directory -Force
     }
 
     Push-Location $QualityTestPath
